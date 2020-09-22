@@ -10,7 +10,7 @@ Matrix::Matrix(const char * c_str) {
 	std::istringstream istr(c_str);
 	// counting rows and cols
 	int total = 0, x_cols = 0;
-	double num;
+	elem_type num;
 	char ch;
 	while (istr >> ch) {
 		if (isdigit(ch) || ch == '-') {
@@ -28,7 +28,7 @@ Matrix::Matrix(const char * c_str) {
 		cols = x_cols;
 	rows = total / cols;
 	// create and fill array
-	create();
+	if (!create()) bad_allocation(*this);
 	std::istringstream istr1(c_str);
 	int i = 0, j = 0;
 	while (istr1 >> ch) {
@@ -50,7 +50,7 @@ Matrix::Matrix(const Matrix& orig) {
 
 	rows = orig.rows;
 	cols = orig.cols;
-	create();
+	if (!create()) bad_allocation(*this);
 
 	//copying all elements
 	for (int i = 0; i < rows; i++)
@@ -60,45 +60,63 @@ Matrix::Matrix(const Matrix& orig) {
 
 // move constructor
 Matrix::Matrix(Matrix&& m) : rows(m.rows), cols(m.cols), matrix(m.matrix) {
-	//std::cout << "---->Move Constructor<----\n";
-
-	m.rows = m.cols = 0;
+	std::cout << "---->Move Constructor<----\n";
 	m.matrix = nullptr;
+	m.rows = 0;
+	m.cols = 0;
 }
 
 Matrix::~Matrix()
 {
-	for (int i = 0; i < rows; i++)
-		delete[] matrix[i];
-	delete[] matrix;
+	for (int i = 0; i < rows; i++) {
+		if (matrix[i] != nullptr)
+			delete[] matrix[i];
+	}
+	if (matrix != nullptr) {
+		delete[] matrix;
+	}
+	
 }
 
 //*************************************************** methods *****************************
-void Matrix::create() {
-	matrix = new double *[rows];               //allocating memory for an array of pointers
-	for (int i = 0; i < rows; i++)
-		matrix[i] = new double[cols];	        //allocating memory for all others arrays
+bool Matrix::create() {
+	matrix = new(std::nothrow) elem_type *[rows];                          //allocating memory for an array of pointers
+	if (matrix == nullptr) {
+		return false;
+	}
+	for (int i = 0; i < rows; i++) {
+		matrix[i] = new(std::nothrow) elem_type[cols];                		//allocating memory for all intern arrays
+		if (matrix[i] == nullptr) {
+			return false;
+		}
+	}
+	return true;
 }
 
-void Matrix::operator=(const Matrix& orig) {
+void Matrix::swap(Matrix& b) {
+	using std::swap;
+	swap(matrix, b.matrix);
+	swap(rows, b.rows);
+	swap(cols, b.cols);
+}
+
+Matrix& Matrix::operator=(const Matrix& orig) {
 	//std::cout << "---->Copy Assignment<----\n";
-	if (this != &orig) {   //self-assignment check
-		//free the memory of old matrix
-		for (int i = 0; i < rows; i++)
-			delete[] matrix[i];
-		delete[] matrix;
-		//allocating the same size of memory as another matrix
+	if (matrix != orig.matrix) {
+		this->~Matrix();
 		rows = orig.rows;
 		cols = orig.cols;
 		create();
-		//copying all elements
-		for (int i = 0; i < rows; i++)
-			for (int j = 0; j < cols; j++)
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
 				matrix[i][j] = orig.matrix[i][j];
+			}
+		}
 	}
+	return *this;
 }
 
-void Matrix::operator=(Matrix&& orig) {
+Matrix& Matrix::operator=(Matrix&& orig) {
 	//std::cout << "---->Move Assignment<----\n";
 	(*this).~Matrix();
 	//shallow copy
@@ -106,9 +124,11 @@ void Matrix::operator=(Matrix&& orig) {
 	cols = orig.cols;
 	matrix = orig.matrix;
 	// make safe orig
-	orig.rows = orig.cols = 0;
 	orig.matrix = nullptr;
+	orig.rows = orig.cols = 0;
+	return *this;
 }
+
 void Matrix::fill() {
 	srand(time(NULL));
 	for (int i = 0; i < rows; i++)
@@ -219,24 +239,23 @@ Matrix Matrix::operator-(const Matrix& b)const {
 
 //********************************************************multiplication*********************************
 Matrix Matrix::operator*(const Matrix& b) const {
-	if ((*this).cols != b.rows) {
+	if (cols != b.rows) {
 		std::cerr << "Error! column of first matrix not equal to row of second.\n";
 		return *this;
 	}
-	Matrix mult{ (*this).rows, b.cols };
-	for (int i = 0; i < mult.rows; i++)
-		for (int j = 0; j < mult.cols; j++)
+	Matrix mult{ rows, b.cols };
+			
+	for (int i = 0; i < rows; i++)
+		for (int j = 0; j < b.cols; j++) {
 			mult.matrix[i][j] = 0;
-		
-	for (int i = 0; i < (*this).rows; i++)
-		for (int j = 0; j < b.cols; j++)
-			for (int k = 0; k < (*this).cols; k++)
-				mult.matrix[i][j] += (*this).matrix[i][k] * b.matrix[k][j];
+			for (int k = 0; k < cols; k++)
+				mult.matrix[i][j] += matrix[i][k] * b.matrix[k][j];
+		}
 
 	return mult;
 }
 
-Matrix Matrix::operator*(double x)const {
+Matrix Matrix::operator*(elem_type x)const {
 	Matrix mult(rows, cols);
 	for (int i = 0; i < rows; i++)
 		for (int j = 0; j < cols; j++)
@@ -280,7 +299,7 @@ double Matrix::determinant()const {
 		return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
 		
 	int row = 0;
-	double det = 0;
+	elem_type det = 0;
 	int sign = 1;
 	for (int j = 0; j < cols; j++) {
 		if (matrix[row][j] == 0) {
@@ -303,17 +322,17 @@ Matrix Matrix::invert()const {
 	std::cout << "Transpose matrix:\n";
 	invert.display();
 	// Making A* (Adjugate matrix)
-	Matrix un(rows, cols);
+	Matrix adjugate(rows, cols);
 	int sign = 1;
 	for (int i = 0; i < rows; i++)
 		for (int j = 0; j < cols; j++) {
-			un.matrix[i][j] = sign * invert.minor(i, j).determinant();
+			adjugate.matrix[i][j] = sign * invert.minor(i, j).determinant();
 			sign *= -1;
 		}
 	std::cout << "Adjugate matrix:\n";
-	un.display();
-	double det = determinant();
-	invert = un / int(det);
+	adjugate.display();
+	elem_type det = determinant();
+	invert = adjugate / int(det);
 	std::cout << "Invert matrix:\n";
 	invert.display();
 	return invert;
@@ -334,7 +353,7 @@ Matrix Matrix::operator/(const Matrix& b)const {
 	}
 	return *this * b.invert();
 }
-Matrix Matrix::operator/(double x)const {
+Matrix Matrix::operator/(elem_type x)const {
 	if (x == 0) {
 		std::cerr << "Error! Dividing by zero!";
 		return *this;

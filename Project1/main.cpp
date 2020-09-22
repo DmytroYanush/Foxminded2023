@@ -2,6 +2,8 @@
 int const ROWS = 10;
 int const COLS = 10;
 int main() {
+	Matrix MMM(INT_MAX);     
+	MMM.display();
 	double d_arr1 [5][5]{ 
 		{12, 13, 14, 15, 16},
 		{22, 23, 24, 25, 26},
@@ -41,6 +43,9 @@ int main() {
 	std::cout << "\n\n\n";
 	m7.display(); */
 
+	Matrix ms;      //"9.12, 9.13, 7.19; 8.12, 8.17, 8,10; 9.17, 10.30, 18.40");
+	ms.fill();
+	ms.display();
 	system("pause");
 	return 0;
 }
@@ -53,7 +58,7 @@ int main() {
 
 
 template<size_t ROW, size_t COL>
-Matrix::Matrix(double(&d_arr)[ROW][COL]) {
+Matrix::Matrix(elem_type(&d_arr)[ROW][COL]) {
 	//std::cout << "I'm in Matrix(double(&d_arr)[ROW][COL])\n";
 	rows = ROW;
 	cols = COL;

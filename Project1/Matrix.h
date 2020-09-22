@@ -1,20 +1,21 @@
 #include <iostream>
 #include <sstream>
+#define elem_type double
 
 class Matrix
 {
 private:
-	double **matrix;
+	elem_type ** matrix;
 	int rows;
 	int cols;
 
 public:
 	//**********************************CONSTRUCTORS AND DESTRUCTOR*********************
 	Matrix() : rows(0), cols(0), matrix(nullptr) { }
-	explicit Matrix(int  i) : rows(abs(i)), cols(abs(i)) { create(); }
-	Matrix(int i, int j) : rows(i), cols(j) { create(); }
+	Matrix(int  i) : rows(abs(i)), cols(abs(i)) { if (!create()) bad_allocation(*this); }
+	Matrix(int i, int j) : rows(i), cols(j) { if(!create()) bad_allocation(*this); }
 	template<size_t ROW, size_t COL>
-	Matrix(double(&d_arr)[ROW][COL]);
+	Matrix(elem_type (&d_arr)[ROW][COL]);
 	Matrix(const char * c_str);
 	Matrix(const Matrix& m); //copy constructor
 	Matrix(Matrix&& m);      //move constructor
@@ -45,17 +46,17 @@ public:
 		*this = *this * b;
 		return *this;
 	}
-	Matrix operator*(double x)const;
-	Matrix& operator*=(double x) {
+	Matrix operator*(elem_type x)const;
+	Matrix& operator*=(elem_type x) {
 		*this = *this * x;
 		return *this;
 	}
 	//************************************division*************************************
 	Matrix minor(int not_this_r, int not_this_c) const;
-	double determinant()const;
+	elem_type determinant()const;
 	Matrix invert()const;
 	Matrix operator/(const Matrix& b)const;
-	Matrix operator/(double x)const;
+	Matrix operator/(elem_type x)const;
 
 	//***************************relation operations and equality checks***************
 	bool operator>(const Matrix& b)const;
@@ -69,12 +70,23 @@ public:
 
 	//***********************************OTHER METHODS*********************************
 	double elem_sum() const;
-	void create();
-	void operator=(const Matrix& orig);
-	void operator=(Matrix&& orig);
+	bool create();
+	void swap(Matrix& b);
+	Matrix& operator=(const Matrix& orig);
+	Matrix& operator=(Matrix&& orig);
 	void fill();
 	void display();
 	std::string to_string();
 	void show();
+
+	void bad_allocation(Matrix & orig) {
+		std::cout << "The memory wasn't allocated.\n";
+		orig.matrix = nullptr;
+		orig.rows = orig.cols = 0;
+	}
+
+	friend void swap(Matrix& a, Matrix b) {
+		a.swap(b);
+	}
 };
 
