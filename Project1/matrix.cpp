@@ -59,11 +59,11 @@ Matrix::Matrix(const Matrix& orig) {
 }
 
 // move constructor
-Matrix::Matrix(Matrix&& m) : rows(m.rows), cols(m.cols), matrix(m.matrix) {
+Matrix::Matrix(Matrix&& orig) : rows(orig.rows), cols(orig.cols), matrix(orig.matrix) {
 	std::cout << "---->Move Constructor<----\n";
-	m.matrix = nullptr;
-	m.rows = 0;
-	m.cols = 0;
+	orig.matrix = nullptr;
+	orig.rows = 0;
+	orig.cols = 0;
 }
 
 Matrix::~Matrix()
@@ -292,7 +292,7 @@ Matrix Matrix::minor(int not_this_r, int not_this_c)const {
 	return minor;
 }
 
-double Matrix::determinant()const {
+elem_type Matrix::determinant()const {
 	if (rows == 1)
 		return matrix[0][0];
 	if (rows == 2)

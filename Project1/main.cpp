@@ -43,8 +43,8 @@ int main() {
 	std::cout << "\n\n\n";
 	m7.display(); */
 
-	Matrix ms;      //"9.12, 9.13, 7.19; 8.12, 8.17, 8,10; 9.17, 10.30, 18.40");
-	ms.fill();
+	Matrix ms("9.12, 9.13,effff7.19fdffe; fef sef 8.12,8.17,8,10;sdfdffs 9.17, feffg10.30, esfef18.40");
+	//ms.fill();
 	ms.display();
 	system("pause");
 	return 0;
