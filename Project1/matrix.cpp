@@ -3,6 +3,8 @@
 #include <ctime>
 #include <climits>
 
+#define OUT(x) std::cout << x << std::endl
+
 //******************************************** constructors and destructor ********************
 // constructor for conversion string char* to object
 Matrix::Matrix(const char * c_str) {
@@ -46,7 +48,7 @@ Matrix::Matrix(const char * c_str) {
 
 // copy constructor
 Matrix::Matrix(const Matrix& orig) {
-	//std::cout << "---->Copy Constructor<----\n";
+	OUT("---->Copy Constructor<----");
 
 	rows = orig.rows;
 	cols = orig.cols;
@@ -59,38 +61,27 @@ Matrix::Matrix(const Matrix& orig) {
 }
 
 // move constructor
-Matrix::Matrix(Matrix&& orig) : rows(orig.rows), cols(orig.cols), matrix(orig.matrix) {
-	std::cout << "---->Move Constructor<----\n";
-	orig.matrix = nullptr;
+Matrix::Matrix(Matrix&& orig) : rows(orig.rows), cols(orig.cols), matrix(std::move(orig.matrix)) {
+	OUT("---->Move Constructor<----");
 	orig.rows = 0;
 	orig.cols = 0;
 }
 
-Matrix::~Matrix()
-{
-	for (int i = 0; i < rows; i++) {
-		if (matrix[i] != nullptr)
-			delete[] matrix[i];
-	}
-	if (matrix != nullptr) {
-		delete[] matrix;
-	}
-	
-}
+
 
 //*************************************************** methods *****************************
-bool Matrix::create() {
-	matrix = new(std::nothrow) elem_type *[rows];                          //allocating memory for an array of pointers
-	if (matrix == nullptr) {
+bool Matrix::create(elem_type initial) {
+	try {
+		matrix.resize(rows);
+		for (int i = 0; i < rows; i++) {
+			matrix[i].resize(cols, initial);
+		}
+		return true;
+	}
+	catch (...) {
 		return false;
 	}
-	for (int i = 0; i < rows; i++) {
-		matrix[i] = new(std::nothrow) elem_type[cols];                		//allocating memory for all intern arrays
-		if (matrix[i] == nullptr) {
-			return false;
-		}
-	}
-	return true;
+
 }
 
 void Matrix::swap(Matrix& b) {
@@ -101,7 +92,7 @@ void Matrix::swap(Matrix& b) {
 }
 
 Matrix& Matrix::operator=(const Matrix& orig) {
-	//std::cout << "---->Copy Assignment<----\n";
+	OUT("---->Copy Assignment<----\n");
 	if (matrix != orig.matrix) {
 		this->~Matrix();
 		rows = orig.rows;
@@ -122,9 +113,8 @@ Matrix& Matrix::operator=(Matrix&& orig) {
 	//shallow copy
 	rows = orig.rows;
 	cols = orig.cols;
-	matrix = orig.matrix;
+	matrix = std::move(orig.matrix);   //for using move semantics from std::vector, safety provided by std::vector
 	// make safe orig
-	orig.matrix = nullptr;
 	orig.rows = orig.cols = 0;
 	return *this;
 }
@@ -187,7 +177,6 @@ double Matrix::elem_sum() const {
 }
 
 //*************************************************OVERLOADING********************************
-
 //**************************************************addition**********************************
 Matrix Matrix::operator+(const Matrix& b)const {
 	if (cols != b.cols || rows != b.rows) {

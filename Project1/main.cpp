@@ -19,7 +19,7 @@ int main() {
 		{0, 0, 0, 0, 25} };
 	Matrix m2(d_arr2);
 	std::cout << "Result of multiplication:\n";
-	(m1 * m2).display();
+	(m1 * m2).to_string();
 
 	std::cout << "m2.determinant() = " << m2.determinant() << std::endl;
 	Matrix m3 = m1 / m2;
@@ -43,8 +43,10 @@ int main() {
 	std::cout << "\n\n\n";
 	m7.display(); */
 
-	Matrix ms("9.12, 9.13,effff7.19fdffe; fef sef 8.12,8.17,8,10;sdfdffs 9.17, feffg10.30, esfef18.40");
+	Matrix ms("9.12, 9.13,effff7.19fdffe; fef sef 8.12,8.17,8.10;sdfdffs 9.17, feffg10.30, esfef18.40");
 	//ms.fill();
+	Matrix ms10("9.12dfdf, 10.3, 11.4");
+	ms10.display();
 	ms.display();
 	system("pause");
 	return 0;

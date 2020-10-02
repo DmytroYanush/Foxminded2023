@@ -1,17 +1,18 @@
 #include <iostream>
 #include <sstream>
+#include <vector>
 #define elem_type double
 
 class Matrix
 {
 private:
-	elem_type ** matrix;
+	std::vector<std::vector<elem_type>> matrix;
 	int rows;
 	int cols;
 
 public:
 	//**********************************CONSTRUCTORS AND DESTRUCTOR*********************
-	Matrix() : rows(0), cols(0), matrix(nullptr) { }
+	Matrix() : rows(0), cols(0) { }
 	Matrix(int  i) : rows(abs(i)), cols(abs(i)) { if (!create()) bad_allocation(*this); }
 	Matrix(int i, int j) : rows(i), cols(j) { if(!create()) bad_allocation(*this); }
 	template<size_t ROW, size_t COL>
@@ -19,7 +20,7 @@ public:
 	Matrix(const char * c_str);
 	Matrix(const Matrix& m); //copy constructor
 	Matrix(Matrix&& m);      //move constructor
-	~Matrix();
+	~Matrix() = default;     //
 	//*************************************OVERLOADING**********************************
 	
 	//*************************************addition*************************************
@@ -70,7 +71,7 @@ public:
 
 	//***********************************OTHER METHODS*********************************
 	double elem_sum() const;
-	bool create();
+	bool create(elem_type initial = 0);
 	void swap(Matrix& b);
 	Matrix& operator=(const Matrix& orig);
 	Matrix& operator=(Matrix&& orig);
@@ -81,7 +82,7 @@ public:
 
 	void bad_allocation(Matrix & orig) {
 		std::cout << "The memory wasn't allocated.\n";
-		orig.matrix = nullptr;
+		orig.matrix.resize(0);
 		orig.rows = orig.cols = 0;
 	}
 
