@@ -4,30 +4,96 @@
 #include <climits>
 
 #define OUT(x) std::cout << x << std::endl
-
+inline void error() {
+	std::cout << "Invalid string!\nIt must be a string representation of a matematical object(matrix)!\n";
+}
 //******************************************** constructors and destructor ********************
 // constructor for conversion string char* to object
 Matrix::Matrix(const char * c_str) {
-	//std::cout << "---->Matrix(const char* c_str)<----\n";
+	/*here there are checks for non-empty string,
+	for valid characters, for the correct sequence of characters,
+	for the equality of elements in the rows*/
+	std::cout << "I'm in Matrix(const char* c_str)\n";
 	std::istringstream istr(c_str);
 	// counting rows and cols
 	int total = 0, x_cols = 0;
-	elem_type num;
+	unsigned begin = 0;   // for controlling beginning of string - '['
+	unsigned end = 0;	  // for controlling ending of string - ']'
+	long num;
 	char ch;
 	while (istr >> ch) {
-		if (isdigit(ch) || ch == '-') {
+		//character validation
+		if ((!isdigit(ch)) && (ch != '[') && (ch != ']') && (ch != '-') && (ch != ',') && (ch != ';')) {
+			error();
+			cols = 0;
+			return;
+		}
+		//syblol '[' must be the first and only 1 time
+		if (ch == '[') {
+			begin += 1;
+			if (begin > 1) {
+				error();
+				cols = 0;
+				return;
+			}
+		}
+		//symbol ']' must be the last
+		else if (ch == ']') {
+			if (end == 1 || begin == 0) {   // always checking begin == 0, because '[' only can be the first
+				error();
+				cols = 0;
+				return;
+			}
+			end += 1;
+		}
+		else if (isdigit(ch) || ch == '-') {
+			if (begin == 0) {
+				error();
+				cols = 0;
+				return;
+			}
 			istr.unget();
 			istr >> num;
 			total++;
 			x_cols++;
+			istr >> ch;
+			// after the number can be only the following characters: ','  ';'  ']'
+			if (ch != ',' && ch != ';' && ch != ']') {
+				error();
+				cols = 0;
+				return;
+			}
+			istr.unget();
 		}
-		if (ch == ';') {
+		// after punctuation symbols can be only numbers or symbol '-' 
+		else if (ch == ',') {
+			istr >> ch;
+			if (ch == ',') {
+				error();
+				cols = 0;
+				return;
+			}
+			istr.unget();
+		}
+		else if (ch == ';') {
+			istr >> ch;
+			//checking if the string is empty (total == 0)
+			if (total == 0 || begin == 0 || ch == ',') {
+				error();
+				cols = 0;
+				return;
+			}
+			//check the equality of the number of elements in the rows
+			if (cols != 0 && cols != x_cols) {
+				error();
+				cols = 0;
+				return;
+			}
+			istr.unget();
 			cols = x_cols;
 			x_cols = 0;
 		}
-	} 
-	if (x_cols != 0) 
-		cols = x_cols;
+	}
 	rows = total / cols;
 	// create and fill array
 	if (!create()) bad_allocation(*this);
@@ -61,35 +127,46 @@ Matrix::Matrix(const Matrix& orig) {
 }
 
 // move constructor
-Matrix::Matrix(Matrix&& orig) : rows(orig.rows), cols(orig.cols), matrix(std::move(orig.matrix)) {
+Matrix::Matrix(Matrix&& orig) : rows(orig.rows), cols(orig.cols), matrix(orig.matrix) {
 	OUT("---->Move Constructor<----");
 	orig.rows = 0;
 	orig.cols = 0;
+	orig.matrix = nullptr;
 }
 
+Matrix::~Matrix()
+{
+	if (matrix != nullptr) {
+		for (unsigned i = 0; i < rows; i++)
+			delete[] matrix[i];
+		delete[] matrix;
+	}
+}
 
 
 //*************************************************** methods *****************************
-bool Matrix::create(elem_type initial) {
-	try {
-		matrix.resize(rows);
-		for (int i = 0; i < rows; i++) {
-			matrix[i].resize(cols, initial);
-		}
-		return true;
-	}
-	catch (...) {
+bool Matrix::create() {
+	matrix = new(std::nothrow) elem_type *[rows];
+	if (matrix == nullptr)
 		return false;
+	for (unsigned i = 0; i < rows; i++) {
+		matrix[i] = new(std::nothrow) elem_type[cols];
+		if (matrix[i] == nullptr)
+			return false;
 	}
-
+	return true;
+}
+void Matrix::bad_allocation(Matrix & orig) {
+	std::cout << "The memory wasn't allocated.\n";
+	if (matrix != nullptr) {
+		size_t i = 0;
+		while (matrix[i] != nullptr)
+			delete[] matrix[i++];
+		delete[] matrix;
+	}
+	rows = cols = 0;
 }
 
-void Matrix::swap(Matrix& b) {
-	using std::swap;
-	swap(matrix, b.matrix);
-	swap(rows, b.rows);
-	swap(cols, b.cols);
-}
 
 Matrix& Matrix::operator=(const Matrix& orig) {
 	OUT("---->Copy Assignment<----\n");
@@ -97,7 +174,7 @@ Matrix& Matrix::operator=(const Matrix& orig) {
 		this->~Matrix();
 		rows = orig.rows;
 		cols = orig.cols;
-		create();
+		if(!create()) bad_allocation(*this);
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				matrix[i][j] = orig.matrix[i][j];
@@ -113,9 +190,11 @@ Matrix& Matrix::operator=(Matrix&& orig) {
 	//shallow copy
 	rows = orig.rows;
 	cols = orig.cols;
-	matrix = std::move(orig.matrix);   //for using move semantics from std::vector, safety provided by std::vector
+	matrix = orig.matrix;   //
 	// make safe orig
-	orig.rows = orig.cols = 0;
+	orig.rows = 0;
+	orig.cols = 0;
+	orig.matrix = nullptr;
 	return *this;
 }
 
@@ -354,44 +433,3 @@ Matrix Matrix::operator/(elem_type x)const {
 	return div;
 }
 
-//***************************relation operations and equality checks*******************
-bool Matrix::operator>(const Matrix& b) const {
-	if (elem_sum() > b.elem_sum())
-		return true;
-	else
-		return false;
-}
-
-bool Matrix::operator>=(const Matrix& b) const {
-	if (elem_sum() >= b.elem_sum())
-		return true;
-	else
-		return false;
-}
-
-bool Matrix::operator<(const Matrix& b) const {
-	if (elem_sum() < b.elem_sum())
-		return true;
-	else
-		return false;
-}
-
-bool Matrix::operator<=(const Matrix& b) const {
-	if (elem_sum() > b.elem_sum())
-		return true;
-	else
-		return false;
-}
-
-bool Matrix::operator==(const Matrix& b) const {
-	if (elem_sum() == b.elem_sum())
-		return true;
-	else
-		return false;
-}
-bool Matrix::operator!=(const Matrix& b) const {
-	if (elem_sum() != b.elem_sum())
-		return true;
-	else
-		return false;
-}
