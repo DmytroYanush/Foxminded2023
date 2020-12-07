@@ -6,24 +6,34 @@
 class Matrix
 {
 private:
-	elem_type** matrix;
-	int rows;
-	int cols;
-
+	elem_type** matrix = nullptr;
+	unsigned rows  = 0;
+	unsigned cols = 0;
+	/*Ці функції використовуюються для 
+	оператора ділення матриці на матрицю
+	і викликаються тільки з operator/ в іншому
+	випадку слід продубльовувати провірки з operator/
+	*/
+	Matrix minor(unsigned not_this_r, unsigned not_this_c) const;
+	elem_type determinant()const;
+	Matrix invert()const;
 public:
 	//**********************************CONSTRUCTORS AND DESTRUCTOR*********************
-	Matrix() : rows(0), cols(0) { }
-	Matrix(int  i) : rows(1), cols(1) {
-		if (!create()) bad_allocation(*this);
+	Matrix() = default;
+	Matrix(unsigned  i) : rows(1), cols(1) {
+		create();
 		matrix[0][0] = i;
 	}
-	Matrix(int i, int j) : rows(i), cols(j) { if (!create()) bad_allocation(*this); }
+	Matrix(unsigned i, unsigned j) : rows(i), cols(j) 
+	{ 
+		create(); 
+	}
 	template<size_t ROW, size_t COL>
 	Matrix(elem_type(&d_arr)[ROW][COL]);
 	Matrix(const char * c_str);
-	Matrix(const Matrix& m);   //copy constructor
-	Matrix(Matrix&& m);        //move constructor
-	~Matrix();
+	Matrix(const Matrix& m);                        //copy constructor
+	Matrix(Matrix&& m);                             //move constructor
+	~Matrix();                      //destructor
 	//*************************************OVERLOADING**********************************
 
 	//*************************************addition*************************************
@@ -56,9 +66,7 @@ public:
 		return *this;
 	}
 	//************************************division*************************************
-	Matrix minor(int not_this_r, int not_this_c) const;
-	elem_type determinant()const;
-	Matrix invert()const;
+	
 	Matrix operator/(const Matrix& b)const;
 	Matrix operator/(elem_type x)const;
 
@@ -86,14 +94,14 @@ public:
 
 	//***********************************OTHER METHODS*********************************
 	double elem_sum() const;
-	bool create();
+	void create();
 	
 	Matrix& operator=(const Matrix& orig);
 	Matrix& operator=(Matrix&& orig);
-	void fill();
-	void display();
+	void fill_matrix();
+	void display()noexcept;
 	std::string to_string();
-	void show();
-	void bad_allocation(Matrix & orig);
+	void show()noexcept;
+	void bad_alloc_fix(Matrix & orig)noexcept;
 };
 
