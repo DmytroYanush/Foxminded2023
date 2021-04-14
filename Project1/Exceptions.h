@@ -1,6 +1,5 @@
-//#include <stdexcept>
-#include <exception>
-#include <new>
+#include "pch.h"
+
 class Exception : public std::exception
 {
 public:
@@ -9,7 +8,6 @@ public:
 	{}
 
 	virtual ~Exception() noexcept {}
-
 	virtual const char* what() {
 		msg_ = "CLASS EXCEPTION OCCURED!\n" + msg_;
 		return msg_.c_str();
@@ -64,6 +62,16 @@ public:
 	{}
 	const char* what() {
 		msg_ = std::string("ZERO DIVIDING:\n") + msg_;
+		return msg_.c_str();
+	}
+};
+
+class Bad_file : public Exception {
+public:
+	explicit Bad_file(const std::string& message = "") : Exception(message)
+	{}
+	const char* what() {
+		msg_ = std::string("SOME PROBLEMS WITH FILE OPENNING:\n") + msg_;
 		return msg_.c_str();
 	}
 };

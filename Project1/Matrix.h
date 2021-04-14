@@ -1,19 +1,11 @@
-#include <iostream>
-#include <sstream>
-#include <vector>
+#include "pch.h"
 #define elem_type double
 
-class Matrix
-{
+class Matrix {
 private:
 	elem_type** matrix = nullptr;
 	unsigned rows  = 0;
 	unsigned cols = 0;
-	/*Ці функції використовуюються для 
-	оператора ділення матриці на матрицю
-	і викликаються тільки з operator/ в іншому
-	випадку слід продубльовувати провірки з operator/
-	*/
 	Matrix minor(unsigned not_this_r, unsigned not_this_c) const;
 	elem_type determinant()const;
 	Matrix invert()const;
@@ -30,10 +22,10 @@ public:
 	}
 	template<size_t ROW, size_t COL>
 	Matrix(elem_type(&d_arr)[ROW][COL]);
-	Matrix(const char * c_str);
-	Matrix(const Matrix& m);                        //copy constructor
-	Matrix(Matrix&& m);                             //move constructor
-	~Matrix();                      //destructor
+	Matrix(std::string c_str);
+	Matrix(const Matrix& m);                        
+	Matrix(Matrix&& m);                             
+	~Matrix();                      
 	//*************************************OVERLOADING**********************************
 
 	//*************************************addition*************************************
@@ -103,5 +95,10 @@ public:
 	std::string to_string();
 	void show()noexcept;
 	void bad_alloc_fix(Matrix & orig)noexcept;
+
+	//********************************* methods for sorting ***************************
+	elem_type count_diags() const;
+	elem_type count_trace() const;
+	size_t matrix_size() const;
 };
 

@@ -1,12 +1,8 @@
-#include "Matrix.h"
-#include "Exceptions.h"
-#include <algorithm>
-#include <ctime>
-#include <climits>
+#include "pch.h"
 
 //******************************************** constructors and destructor ********************
 // constructor for conversion string char* to object
-Matrix::Matrix(const char * c_str) {
+Matrix::Matrix(std::string c_str) {
 	/*here there are checks for non-empty string,
 	for valid characters, for the correct sequence of characters,
 	for the equality of elements in the rows*/
@@ -15,13 +11,13 @@ Matrix::Matrix(const char * c_str) {
 	int total = 0, x_cols = 0;
 	unsigned begin = 0;   // for controlling beginning of string - '['
 	unsigned end = 0;	  // for controlling ending of string - ']'
-	long num;
+	elem_type num;
 	char ch;
 	try {
 		while (istr >> ch) {
 			//character validation
-			if ((!isdigit(ch)) && (ch != '[') && (ch != ']') && (ch != '-') && (ch != ',') && (ch != ';')) {
-				throw Bad_string("Only such characters are valid: '['\t'-'\t','\t';'\t']'.\n");
+			if ((!isdigit(ch)) && (ch != '[') && (ch != ']') && (ch != '-') && (ch != ',') && (ch != ';') && (ch != '.')) {
+				throw Bad_string("Only such characters are valid: '['\t'-'\t','\t';'\t']'\t'.'.\n");
 			}
 
 			//syblol '[' must be the first and only 1 time
@@ -50,8 +46,8 @@ Matrix::Matrix(const char * c_str) {
 				x_cols++;
 				istr >> ch;
 				// after the number can be only the following characters: ','  ';'  ']'
-				if (ch != ',' && ch != ';' && ch != ']') {
-					throw Bad_string("After the number can be only the following characters: ','  ';'  ']'.\n");
+				if (ch != ',' && ch != ';' && ch != ']' && ch != '.') {
+					throw Bad_string("After the number can be only the following characters: ','  ';'  ']' '.' .\n");
 				}
 				istr.unget();
 			}
@@ -180,7 +176,6 @@ void Matrix::bad_alloc_fix(Matrix & orig)noexcept {
 	rows = cols = 0;
 }
 
-
 Matrix& Matrix::operator=(const Matrix& orig) {
 	if (matrix != orig.matrix) {
 		this->~Matrix();
@@ -213,10 +208,24 @@ Matrix& Matrix::operator=(Matrix&& orig) {
 }
 
 void Matrix::fill_matrix() {
-	srand(time(NULL));
+	std::random_device rd;
+	std::mt19937::result_type seed = rd() ^ (
+		(std::mt19937::result_type)
+		std::chrono::duration_cast<std::chrono::seconds>(
+			std::chrono::system_clock::now().time_since_epoch()
+			).count() +
+			(std::mt19937::result_type)
+		std::chrono::duration_cast<std::chrono::microseconds>(
+			std::chrono::high_resolution_clock::now().time_since_epoch()
+			).count());
+
+	std::mt19937 gen(seed);
+	std::uniform_int_distribution<unsigned> distrib(1, 99);
+		
 	for (unsigned i = 0; i < rows; i++)
 		for (unsigned j = 0; j < cols; j++)
-			matrix[i][j] = rand() % 10000 - 5000;
+			matrix[i][j] = distrib(gen);
+	
 }
 
 void Matrix::display()noexcept {
@@ -501,3 +510,28 @@ Matrix Matrix::operator/(elem_type x)const {
 	return Matrix();
 }
 
+//*********************************************sorting********************************************
+elem_type Matrix::count_diags() const
+{
+	if (rows != cols)
+		throw Exception("It is impossible to calculate the sum of the elements of the diagonal in a non-square matrix.\n");
+	elem_type sum = count_trace();
+	for (int i = rows - 1; i >= 0; i--)
+		for (int j = 0; j < cols; j++)
+			sum += matrix[i][j];
+	return sum;
+}
+
+elem_type Matrix::count_trace() const
+{
+	if (rows != cols)
+		throw Exception("It is impossible to calculate the trace in a non - square matrix.\n");
+	elem_type sum = 0;
+	for (int i = 0; i < rows; i++)
+		sum += matrix[i][i];
+	return sum;
+}
+
+size_t Matrix::matrix_size() const {
+	return rows * cols * sizeof(elem_type);
+}
