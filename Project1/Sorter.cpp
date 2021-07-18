@@ -4,7 +4,7 @@ void QuickSort::matrixSort(std::vector<Matrix>& mvec, size_t size) {
 	std::sort(mvec.begin(), mvec.end(), compare);
 }
 
-void QuickSort::matrixSort(Matrix* mptr, size_t size) {
+void QuickSort::matrixSort(Matrix mptr[], size_t size) {
 	qsort(mptr, size, sizeof(Matrix), qsort_compare);
 }
 
@@ -33,7 +33,7 @@ void UsualSort::matrixSort(std::vector<Matrix>& mvec, size_t size)
 		UsualSort::matrixSort(&mvec[i], mvec.size() - i);
 }
 
-void UsualSort::matrixSort(Matrix* m_ptr, size_t size) {
+void UsualSort::matrixSort(Matrix m_ptr[], size_t size) {
 	Compare compare;
 	Matrix pivot = m_ptr[size / 2];
 	int i = 0;
@@ -77,15 +77,15 @@ int qsort_compare(const void* pm1, const void* pm2)
 {  
 	Matrix& m1 = *(Matrix*)pm1;
 	Matrix& m2 = *(Matrix*)pm2;
-	if (m1.count_diags() == m2.count_diags()) {
-		if (m1.count_trace() < m2.count_trace())
+	if (m1.count_diags() != m2.count_diags()) {
+		if (m1.count_diags() < m2.count_diags())
 			return -1;
-		else if (m1.count_trace() > m2.count_trace())
+		else if (m1.count_diags() > m2.count_diags())
 			return 1;
 	}
-	else if (m1.count_diags() < m2.count_diags())
+	else if (m1.count_trace() < m2.count_trace())
 		return -1;
-	else if (m1.count_diags() > m2.count_diags())
+	else if (m1.count_trace() > m2.count_trace())
 		return 1;
 	else
 		return 0;

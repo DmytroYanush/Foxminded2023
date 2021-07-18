@@ -1,13 +1,36 @@
 #include "pch.h"
 class Loader {
 public:
-	virtual Matrix load(std::string path = "") const = 0;
+	virtual Matrix load() = 0;
 };
+
 class ConsoleLoader : public Loader {
 public:
-	Matrix load(std::string path = "") const override;
+	Matrix load() override;
 };
+
 class FileLoader : public Loader {
 public:
-	Matrix load(std::string path = "") const override;
+	FileLoader() = default;
+	FileLoader (const std::string& pth) : path(pth) 
+	{
+		fin.open(path);
+	}
+	Matrix load() override;
+	void open(const std::string& pth)
+	{
+		fin.close();
+		fin.open(pth);
+	}
+	void close()
+	{
+		fin.close();
+	}
+	~FileLoader()
+	{
+		fin.close();
+	}
+private:
+	std::string path = "";
+	std::ifstream fin;
 };

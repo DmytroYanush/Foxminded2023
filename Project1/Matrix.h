@@ -24,7 +24,9 @@ public:
 	Matrix(elem_type(&d_arr)[ROW][COL]);
 	Matrix(std::string c_str);
 	Matrix(const Matrix& m);                        
-	Matrix(Matrix&& m);                             
+	Matrix(Matrix&& m);   
+	Matrix& operator=(const Matrix& orig);
+	Matrix& operator=(Matrix&& orig);
 	~Matrix();                      
 	//*************************************OVERLOADING**********************************
 
@@ -88,8 +90,6 @@ public:
 	double elem_sum() const;
 	void create();
 	
-	Matrix& operator=(const Matrix& orig);
-	Matrix& operator=(Matrix&& orig);
 	void fill_matrix();
 	void display()noexcept;
 	std::string to_string();
@@ -99,6 +99,5 @@ public:
 	//********************************* methods for sorting ***************************
 	elem_type count_diags() const;
 	elem_type count_trace() const;
-	size_t matrix_size() const;
 };
 

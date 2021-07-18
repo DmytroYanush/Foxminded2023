@@ -1,5 +1,5 @@
 #include "pch.h"
-Matrix ConsoleLoader::load(std::string path) const {
+Matrix ConsoleLoader::load() {
 	std::cout << "Enter the matrix in the following format:"
 		<< "[a,b,c; d, f, e], where a, b, c, d, … – numbers.\n";
 	std::string temp = "";
@@ -11,16 +11,15 @@ Matrix ConsoleLoader::load(std::string path) const {
 	return Matrix(temp);
 }
 
-Matrix	FileLoader::load(std::string path) const {
-	std::ifstream f_in(path);
-	if (f_in) {
+Matrix	FileLoader::load() {
+	if (fin) 
+	{
 		std::string temp = "";
 		char ch;
 		do {
-			f_in >> ch;
+			fin >> ch;
 			temp += ch;
 		} while (ch != ']');
-		f_in.close();
 		return Matrix(temp);
 	}
 	else

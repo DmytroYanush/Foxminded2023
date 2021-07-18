@@ -532,6 +532,3 @@ elem_type Matrix::count_trace() const
 	return sum;
 }
 
-size_t Matrix::matrix_size() const {
-	return rows * cols * sizeof(elem_type);
-}

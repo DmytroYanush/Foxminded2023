@@ -1,9 +1,11 @@
 #include "pch.h"
+void task_8();
 void task_7();
 void task_2_3_5();
 int main() {
 	//task_2_3_5();
-	task_7();
+	//task_7();
+	task_8();
 	system("pause");
 	return 0;
 }
@@ -89,6 +91,16 @@ void fill_vec_of_matrices(std::vector<Matrix>& m_vec, size_t size)
 		m_vec.push_back(temp);
 	}
 }
+
+void fill_myVec_of_matrices(Vector& m_vec, size_t size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		Matrix temp(8, 8);
+		temp.fill_matrix();
+		m_vec.push_back(temp);
+	}
+}
 void show_arr_of_matrices(Matrix* arr, size_t size)
 {
 	for (int i = 0; i < size; i++) {
@@ -108,22 +120,22 @@ void show_vec_of_matrices(std::vector<Matrix>& m_vec)
 }
 void task_7() {
 	
-	/*Loader *source;
+	Loader *source;
 	ConsoleLoader cl;
 	source = &cl;
 	Matrix m1 = source->load();
 	m1.display();
 
-	FileLoader fl;
+	FileLoader fl("MyMatrices.txt");
 	source = &fl;
 	Matrix m2;
 	try {
-		m2 = source->load("MyMatrices.txt");
+		m2 = source->load();
 	}
 	catch (Exception& E) {
 		std::cout << E.what();
 	}
-	m2.display();*/
+	m2.display();
 	/////////////////////////////////////////////sorting////////////////////////////////////
 	const size_t SIZE = 10;
 	std::cout << "In what matrices will be stored?\n"
@@ -181,10 +193,45 @@ void task_7() {
 		}
 	}
 	
-	
-	
 }
 
+void task_8()
+{
+	// Loader
+	Vector myVector1;
+	FileLoader fl("MyMatrices.txt");
+	myVector1.load(fl, 4);
+	   
+	myVector1.print();
+
+
+
+
+
+	//======================================================================
+	//fill_myVec_of_matrices(myVector1, 10);
+	
+	myVector1.print();
+	std::cout << "--------------------------------------------------------\n";
+	
+	Compare compare;
+	std::sort(myVector1.begin(), myVector1.end(), compare);
+	std::cout << "After sorting with std::sort():\n";
+	myVector1.print();
+	std::cout << "--------------------------------------------------------\n";
+
+	try {
+		std::cout << "After deleting the first and the last elements:\n";
+		myVector1.erase(1);
+		myVector1.erase(4);
+		myVector1.print();
+		auto it = myVector1.begin();
+		it + 2;
+	}
+	catch (Exception& ex) {
+		std::cout << ex.what();
+	}
+}
 
 
 
