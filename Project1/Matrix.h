@@ -1,3 +1,4 @@
+#pragma once
 #include "pch.h"
 #define elem_type double
 
@@ -89,15 +90,24 @@ public:
 	//***********************************OTHER METHODS*********************************
 	double elem_sum() const;
 	void create();
-	
 	void fill_matrix();
 	void display()noexcept;
 	std::string to_string();
 	void show()noexcept;
 	void bad_alloc_fix(Matrix & orig)noexcept;
-
+	friend std::ostream& operator<<(std::ostream& os, const Matrix& m);
 	//********************************* methods for sorting ***************************
 	elem_type count_diags() const;
 	elem_type count_trace() const;
 };
 
+template<size_t ROW, size_t COL>
+Matrix::Matrix(elem_type(&d_arr)[ROW][COL]) {
+	
+	rows = ROW;
+	cols = COL;
+	create();
+	for (unsigned i = 0; i < rows; i++)
+		for (unsigned j = 0; j < cols; j++)
+			matrix[i][j] = d_arr[i][j];
+}

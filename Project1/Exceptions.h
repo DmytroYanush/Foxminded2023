@@ -1,3 +1,4 @@
+#pragma once
 #include "pch.h"
 
 class Exception : public std::exception

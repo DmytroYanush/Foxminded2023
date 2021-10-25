@@ -1,3 +1,4 @@
+#pragma once
 #include "pch.h"
 
 //******************************************** constructors and destructor ********************
@@ -74,6 +75,8 @@ Matrix::Matrix(std::string c_str) {
 				x_cols = 0;
 			}
 		}
+		if (cols == 0)
+			throw Bad_string("The string is empty.\n");
 		rows = total / cols;
 		// create and fill array
 		create();
@@ -99,6 +102,7 @@ Matrix::Matrix(std::string c_str) {
 	}
 	catch (...) {
 		std::cout << "Some error occured!\n";
+		throw;
 	}
 }
 
@@ -162,6 +166,7 @@ void Matrix::create() {
 	catch(std::bad_alloc & ba) {
 		bad_alloc_fix(*this);
 		std::cout << ba.what() << std::endl;
+		throw;
 	}
 }
 
@@ -256,7 +261,21 @@ std::string Matrix::to_string() {
 	return os.str();   // convert type ostringstream to string
 }
 
-void Matrix::show() noexcept {
+std::ostream& operator<<(std::ostream& os, const Matrix& m)
+{
+	for (unsigned i = 0; i < m.rows; i++)
+	{
+		for (unsigned j = 0; j < m.cols; j++)
+		{
+			os.width(12);
+			os << m.matrix[i][j];
+		}
+		os << '\n';
+	}
+	return os;
+}
+void Matrix::show() noexcept 
+{
 	std::cout << '[';
 	for (unsigned i = 0; i < rows; i++) {
 		for (unsigned j = 0; j < cols; j++) {
@@ -321,6 +340,7 @@ Matrix Matrix::operator+(const Matrix& b)const {
 	}
 	catch (...) {
 		std::cout << "Some error occured!\n";
+		throw;
 	}
 	return Matrix();
 }
@@ -366,6 +386,7 @@ Matrix Matrix::operator-(const Matrix& b)const {
 	}
 	catch (...) {
 		std::cout << "Some error occured!\n";
+		throw;
 	}
 	return Matrix();
 }
@@ -390,6 +411,7 @@ Matrix Matrix::operator*(const Matrix& b) const {
 	}
 	catch (Exception& baa) {
 		std::cout << baa.what();
+		throw;
 	}
 	return Matrix();
 }
@@ -490,6 +512,7 @@ Matrix Matrix::operator/(const Matrix& b)const {
 	}
 	catch (Exception& baa) {
 		std::cout << baa.what();
+		throw;
 	}
 	return Matrix();
 }
@@ -506,6 +529,7 @@ Matrix Matrix::operator/(elem_type x)const {
 	}
 	catch (Exception& e) {
 		std::cout << e.what();
+		throw;
 	}
 	return Matrix();
 }

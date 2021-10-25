@@ -1,14 +1,19 @@
+#pragma once
+#pragma once
 #include "PCH.h"
-void QuickSort::matrixSort(std::vector<Matrix>& mvec, size_t size) {
+/*Sorter functions must work with iterators,
+do not rely on consistently arranged elements
+*/
+
+void QuickSort::matrixSort(Vector<Matrix>& mvec, size_t size) {
 	Compare compare;       
 	std::sort(mvec.begin(), mvec.end(), compare);
 }
-
 void QuickSort::matrixSort(Matrix mptr[], size_t size) {
 	qsort(mptr, size, sizeof(Matrix), qsort_compare);
 }
 
-void UsualSort::matrixSort(std::vector<Matrix>& mvec, size_t size)
+void UsualSort::matrixSort(Vector<Matrix>& mvec, size_t size)
 {
 	Compare compare;
 	Matrix pivot = *(mvec.begin() + mvec.size() / 2);    // pivot is matrix object
@@ -59,18 +64,18 @@ void UsualSort::matrixSort(Matrix m_ptr[], size_t size) {
 
 bool Compare::operator()(const Matrix& m1, const Matrix& m2)
 {
-	if (m1.count_diags() == m2.count_diags())
-		return m1.count_trace() < m2.count_trace();
-	else
+	if (m1.count_diags() != m2.count_diags())
 		return m1.count_diags() < m2.count_diags();
+	else
+		return m1.count_trace() < m2.count_trace();
 }
 
 bool desc_compare(const Matrix& m1, const Matrix& m2) 
 {
-	if (m1.count_diags() == m2.count_diags())
-		return m1.count_trace() > m2.count_trace();
-	else
+	if (m1.count_diags() != m2.count_diags())
 		return m1.count_diags() > m2.count_diags();
+	else
+		return m1.count_trace() > m2.count_trace();
 }
 
 int qsort_compare(const void* pm1, const void* pm2)

@@ -1,5 +1,7 @@
-#include "pch.h"
-Matrix ConsoleLoader::load() {
+#include "PCH.h"
+/***************************************template spacialization for matrix**********************************/
+template<> 
+Matrix ConsoleLoader<Matrix>::load() {
 	std::cout << "Enter the matrix in the following format:"
 		<< "[a,b,c; d, f, e], where a, b, c, d, … – numbers.\n";
 	std::string temp = "";
@@ -11,15 +13,12 @@ Matrix ConsoleLoader::load() {
 	return Matrix(temp);
 }
 
-Matrix	FileLoader::load() {
-	if (fin) 
+template<> 
+Matrix	FileLoader<Matrix>::load() {
+	if (fin)
 	{
 		std::string temp = "";
-		char ch;
-		do {
-			fin >> ch;
-			temp += ch;
-		} while (ch != ']');
+		getline(fin, temp);
 		return Matrix(temp);
 	}
 	else

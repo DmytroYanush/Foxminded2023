@@ -1,15 +1,24 @@
+#pragma once
 #include "pch.h"
 void task_8();
 void task_7();
 void task_2_3_5();
 int main() {
-	//task_2_3_5();
-	//task_7();
-	task_8();
+	/*********************************** task #9 ************************/
+	Vector<Matrix> vm;
+	FileLoader<Matrix> fl("MyMatrices.txt");
+	vm.load(fl);
+	
+	vm.print();
+	vm.load_actions("MyActions.txt");
+	Matrix m1 = vm.calculate();
+	std::cout << "Result of Calculate:\n" << m1 << std::endl;
+
 	system("pause");
 	return 0;
 }
-////////////////////////////////////////////// tasks 2, 3, 5 //////////////////////////////////////
+/******************************* tasks 2, 3, 5 ***********************************/
+
 void task_2_3_5() {
 	//bad allocation exception
 	Matrix MMM(INT_MAX, INT_MAX);
@@ -82,7 +91,7 @@ void fill_arr_of_matrices(Matrix* arr, size_t size)
 		arr[i] = temp;
 	}
 }
-void fill_vec_of_matrices(std::vector<Matrix>& m_vec, size_t size) 
+void fill_vec_of_matrices(Vector<Matrix>& m_vec, size_t size) 
 {
 	for (int i = 0; i < size; i++)
 	{
@@ -92,7 +101,7 @@ void fill_vec_of_matrices(std::vector<Matrix>& m_vec, size_t size)
 	}
 }
 
-void fill_myVec_of_matrices(Vector& m_vec, size_t size)
+void fill_myVec_of_matrices(Vector<Matrix>& m_vec, size_t size)
 {
 	for (int i = 0; i < size; i++)
 	{
@@ -110,7 +119,7 @@ void show_arr_of_matrices(Matrix* arr, size_t size)
 	}
 }
 
-void show_vec_of_matrices(std::vector<Matrix>& m_vec)
+void show_vec_of_matrices(Vector<Matrix>& m_vec)
 {
 	for (int i = 0; i < m_vec.size(); i++) {
 		std::cout << "The sum of the elements of the two diagonals of the matrix#"<< i + 1 << ": "  << m_vec[i].count_diags()
@@ -120,13 +129,13 @@ void show_vec_of_matrices(std::vector<Matrix>& m_vec)
 }
 void task_7() {
 	
-	Loader *source;
-	ConsoleLoader cl;
+	Loader<Matrix> *source;
+	ConsoleLoader<Matrix> cl;
 	source = &cl;
 	Matrix m1 = source->load();
 	m1.display();
 
-	FileLoader fl("MyMatrices.txt");
+	FileLoader<Matrix> fl("MyMatrices.txt");
 	source = &fl;
 	Matrix m2;
 	try {
@@ -154,21 +163,21 @@ void task_7() {
 		if (ch == 's' || ch == 'S')
 		{
 			p_sort = &QuickSort();
-			p_sort->matrixSort(m_arr, SIZE);        //  void QuickSort::matrixSort(Matrix* m_ptr, size_t q_elem)
+			p_sort->matrixSort(m_arr, SIZE);        //  void QuickSort::matrixSort(T* m_ptr, size_t q_elem)
 			std::cout << "RESULT:\n";
 			show_arr_of_matrices(m_arr, SIZE);
 		}
 		else if (ch == 'c' || ch == 'C')
 		{
 			p_sort = &UsualSort();
-			p_sort->matrixSort(m_arr, SIZE);        // void UsualSort::matrixSort(Matrix* m_ptr, size_t size) 
+			p_sort->matrixSort(m_arr, SIZE);        // void UsualSort::matrixSort(T* m_ptr, size_t size) 
 			std::cout << "RESULT:\n";
 			show_arr_of_matrices(m_arr, SIZE);
 		}
 	}
 	if (ch == 'v' || ch == 'V')
 	{
-		std::vector<Matrix> m_vec;
+		Vector<Matrix> m_vec;
 		fill_vec_of_matrices(m_vec, SIZE);
 
 		Sorter* p_sort = nullptr;
@@ -178,7 +187,7 @@ void task_7() {
 		if (ch == 's' || ch == 'S')
 		{
 			p_sort = &QuickSort();
-			p_sort->matrixSort(m_vec, SIZE);        // void QuickSort::matrixSort(std::vector<Matrix>& mvec, size_t size) 
+			p_sort->matrixSort(m_vec, SIZE);        // void QuickSort::matrixSort(std::vector<T>& mvec, size_t size) 
 
 			std::cout << "RESULT:\n";
 			show_vec_of_matrices(m_vec);
@@ -186,7 +195,7 @@ void task_7() {
 		else if (ch == 'c' || ch == 'C')
 		{
 			p_sort = &UsualSort();
-			p_sort->matrixSort(m_vec, SIZE);        // void UsualSort::matrixSort(std::vector<Matrix>& mvec, size_t size) 
+			p_sort->matrixSort(m_vec, SIZE);        // void UsualSort::matrixSort(std::vector<T>& mvec, size_t size) 
 
 			std::cout << "RESULT:\n";
 			show_vec_of_matrices(m_vec);
@@ -198,9 +207,9 @@ void task_7() {
 void task_8()
 {
 	// Loader
-	Vector myVector1;
-	FileLoader fl("MyMatrices.txt");
-	myVector1.load(fl, 4);
+	Vector<Matrix> myVector1;
+	FileLoader<Matrix> fl("MyMatrices.txt");
+	myVector1.load(fl);
 	   
 	myVector1.print();
 
@@ -236,16 +245,6 @@ void task_8()
 
 
 
-template<size_t ROW, size_t COL>
-Matrix::Matrix(elem_type(&d_arr)[ROW][COL]) {
-	//std::cout << "I'm in Matrix(double(&d_arr)[ROW][COL])\n";
-	rows = ROW;
-	cols = COL;
-	create();
-	for (unsigned i = 0; i < rows; i++)
-		for (unsigned j = 0; j < cols; j++)
-			matrix[i][j] = d_arr[i][j];
-}
 
 
 

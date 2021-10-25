@@ -11,8 +11,10 @@
 #include <climits>
 #include <random>
 #include <chrono>
-#include <memory>	// std::allocator<>
-#include <utility>  // std::move(), std::pair<>
+#include <memory>	// std::allocator<>, std::shared_ptr
+#include <utility>  // std::move(), std::pair<>, std::forward<>
+#include <map>
+#include <functional>   //std::plus<>...std::function<>
 
 #include "Exceptions.h"
 #include "Matrix.h"
