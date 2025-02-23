@@ -42,4 +42,7 @@
       <UniqueIdentifier>{271e80f3-551a-4ce0-bbc1-69b1e78eef92}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
 </Project>

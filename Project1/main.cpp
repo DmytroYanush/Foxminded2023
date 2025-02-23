@@ -162,14 +162,16 @@ void task_7() {
 		std::cin >> ch;
 		if (ch == 's' || ch == 'S')
 		{
-			p_sort = &QuickSort();
+			QuickSort quickSort;
+			p_sort = &quickSort;
 			p_sort->matrixSort(m_arr, SIZE);        //  void QuickSort::matrixSort(T* m_ptr, size_t q_elem)
 			std::cout << "RESULT:\n";
 			show_arr_of_matrices(m_arr, SIZE);
 		}
 		else if (ch == 'c' || ch == 'C')
 		{
-			p_sort = &UsualSort();
+			UsualSort usualSort;
+			p_sort = &usualSort;
 			p_sort->matrixSort(m_arr, SIZE);        // void UsualSort::matrixSort(T* m_ptr, size_t size) 
 			std::cout << "RESULT:\n";
 			show_arr_of_matrices(m_arr, SIZE);
@@ -186,7 +188,8 @@ void task_7() {
 		std::cin >> ch;
 		if (ch == 's' || ch == 'S')
 		{
-			p_sort = &QuickSort();
+			QuickSort quickSort;
+			p_sort = &quickSort;
 			p_sort->matrixSort(m_vec, SIZE);        // void QuickSort::matrixSort(std::vector<T>& mvec, size_t size) 
 
 			std::cout << "RESULT:\n";
@@ -194,7 +197,8 @@ void task_7() {
 		}
 		else if (ch == 'c' || ch == 'C')
 		{
-			p_sort = &UsualSort();
+			UsualSort usualSort;
+			p_sort = &usualSort;
 			p_sort->matrixSort(m_vec, SIZE);        // void UsualSort::matrixSort(std::vector<T>& mvec, size_t size) 
 
 			std::cout << "RESULT:\n";

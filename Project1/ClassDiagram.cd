@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Exception" Collapsed="true">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAABAAABAAAAAAAg=</HashCode>
+      <FileName>Exceptions.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Logic_exc" Collapsed="true">
+    <Position X="4.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Exceptions.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bad_string" Collapsed="true">
+    <Position X="3" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Exceptions.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bad_arith_arg" Collapsed="true">
+    <Position X="5.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Exceptions.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Elem_overflow" Collapsed="true">
+    <Position X="9.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Exceptions.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Div_by_zero" Collapsed="true">
+    <Position X="0.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Exceptions.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bad_file">
+    <Position X="7.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Exceptions.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Loader&lt;T&gt;" Collapsed="true">
+    <Position X="6.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Loader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ConsoleLoader&lt;T&gt;" Collapsed="true">
+    <Position X="5.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Loader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FileLoader&lt;T&gt;" Collapsed="true">
+    <Position X="7.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAIAAAAAAACACAEACAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>Loader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Matrix">
+    <Position X="12.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAIgIAAIBAAAAAAABAASAAIAGgAAAAJABwQAAAAAA=</HashCode>
+      <FileName>Matrix.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Compare">
+    <Position X="12.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Sorter.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sorter" Collapsed="true">
+    <Position X="1.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Sorter.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QuickSort" Collapsed="true">
+    <Position X="0.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Sorter.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UsualSort" Collapsed="true">
+    <Position X="2.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Sorter.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Iterator_I&lt;T&gt;">
+    <Position X="14" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>Vector.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Vector&lt;T&gt;">
+    <Position X="14" Y="3" Width="1.5" />
+    <NestedTypes>
+      <Class Name="Vector&lt;T&gt;::Iterator" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Vector.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="Vector&lt;T&gt;::ActionMap" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Vector.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>ABRABggCAIAAACAADIMIIAAQACEAAAAQIGEgAAAAAgA=</HashCode>
+      <FileName>Vector.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

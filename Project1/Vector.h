@@ -20,7 +20,7 @@ public:
 		using reference = T& ;
 		using pointer = std::shared_ptr<T>* ;
 		using iterator_category = std::random_access_iterator_tag;
-		using difference_type = ptrdiff_t;
+		using difference_type = ptrdiff_t;   // int
 	public:
 		Iterator() = default;
 		Iterator(const pointer ptr, Vector* v)
