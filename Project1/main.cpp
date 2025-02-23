@@ -1,4 +1,3 @@
-#pragma once
 #include "pch.h"
 void task_8();
 void task_7();

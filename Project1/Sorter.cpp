@@ -1,5 +1,3 @@
-#pragma once
-#pragma once
 #include "PCH.h"
 /*Sorter functions must work with iterators,
 do not rely on consistently arranged elements
